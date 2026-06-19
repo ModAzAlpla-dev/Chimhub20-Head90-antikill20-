@@ -1,0 +1,50 @@
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+ScreenGui.IgnoreGuiInset = true 
+ScreenGui.DisplayOrder = 999999
+
+local BlackScreen = Instance.new("Frame", ScreenGui)
+BlackScreen.Size = UDim2.new(1, 0, 1, 0)
+BlackScreen.BackgroundColor3 = Color3.new(0, 0, 0)
+BlackScreen.ZIndex = 99
+
+local Label = Instance.new("TextLabel", BlackScreen)
+-- Đặt size nhỏ lại một chút để chữ không bị sát mép màn hình
+Label.Size = UDim2.new(0.8, 0, 0.2, 0) 
+Label.Position = UDim2.new(0.1, 0, 0.4, 0) -- Canh giữa màn hình
+Label.Text = "Outdated script!"
+Label.TextColor3 = Color3.new(1, 1, 1)
+Label.Font = Enum.Font.Code
+Label.TextSize = 30 -- Size cố định
+Label.TextWrapped = true -- Tự xuống dòng
+Label.TextScaled = false -- Không để nó tự phình to
+Label.BackgroundTransparency = 1
+Label.ZIndex = 100
+
+-- Hiệu ứng chữ run run
+local Connection
+Connection = RunService.RenderStepped:Connect(function()
+    Label.Position = UDim2.new(0.1, math.sin(tick() * 20) * 5, 0.4, math.cos(tick() * 20) * 5)
+end)
+
+-- Thay đổi nội dung
+task.wait(2)
+local fadeOut = TweenService:Create(Label, TweenInfo.new(0.5), {TextTransparency = 1})
+fadeOut:Play()
+fadeOut.Completed:Wait()
+
+-- Đổi sang text mới, nó sẽ tự xuống dòng nếu quá dài nhờ TextWrapped
+Label.Text = "Join my discord\nduonghub for new script!" 
+TweenService:Create(Label, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+
+-- Dọn dẹp
+task.wait(3)
+local endTween = TweenService:Create(BlackScreen, TweenInfo.new(1), {BackgroundTransparency = 1})
+endTween:Play()
+TweenService:Create(Label, TweenInfo.new(1), {TextTransparency = 1}):Play()
+
+endTween.Completed:Wait()
+ScreenGui:Destroy()
+Connection:Disconnect()
