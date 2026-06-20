@@ -1,0 +1,109 @@
+-- Menu "Pháp Sư Tổng Hợp - All In One (Bản Vô Đối - Fix Kick)" 😈
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+   Name = "Tổng Kho Pháp Thuật 😈",
+   LoadingTitle = "Đang triệu hồi sức mạnh...",
+   LoadingSubtitle = "By Gemini for My Bro",
+   KeySystem = false
+})
+
+-- TAB 1: Troll Mode (Càn quét)
+local Tab1 = Window:CreateTab("Troll Mode", nil)
+
+Tab1:CreateToggle({
+   Name = "Auto Fling (Bản né Anti-Cheat)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.FlingEnabled = Value
+      local lp = game.Players.LocalPlayer
+      spawn(function()
+         while _G.FlingEnabled do
+            local char = lp.Character
+            -- Tắt va chạm để bồ không bị đẩy
+            if char and char:FindFirstChild("HumanoidRootPart") then
+               for _, v in pairs(char:GetDescendants()) do
+                  if v:IsA("BasePart") then v.CanCollide = false end
+               end
+            end
+            -- Fling dùng RotVelocity (Xoay tròn) để né Anti-Cheat
+            for _, v in pairs(game.Players:GetPlayers()) do
+               if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                  v.Character.HumanoidRootPart.RotVelocity = Vector3.new(0, 9999, 0)
+                  v.Character.HumanoidRootPart.Velocity = Vector3.new(0, 50, 0)
+               end
+            end
+            task.wait(0.1)
+         end
+         -- Phục hồi va chạm
+         local char = lp.Character
+         if char then
+            for _, v in pairs(char:GetDescendants()) do
+               if v:IsA("BasePart") then v.CanCollide = true end
+            end
+         end
+      end)
+   end,
+})
+
+Tab1:CreateToggle({
+   Name = "Auto Instant Hook All",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.AutoHook = Value
+      spawn(function()
+         while _G.AutoHook do
+            local lp = game.Players.LocalPlayer
+            local tool = lp.Character:FindFirstChildOfClass("Tool")
+            if tool then
+               for _, v in pairs(game.Players:GetPlayers()) do
+                  if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                     tool:Activate()
+                  end
+               end
+            end
+            task.wait(0.2)
+         end
+      end)
+   end,
+})
+
+-- TAB 2: Visuals & Utility (Chống bị quăng)
+local Tab2 = Window:CreateTab("Visuals & Utils", nil)
+
+Tab2:CreateToggle({
+   Name = "Anti-Fling (Chống bị quăng)",
+   CurrentValue = false,
+   Callback = function(Value)
+      _G.AntiFling = Value
+      spawn(function()
+         while _G.AntiFling do
+            local hrp = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if hrp and hrp.Velocity.Magnitude > 100 then
+               hrp.Velocity = Vector3.new(0, 0, 0)
+               hrp.RotVelocity = Vector3.new(0, 0, 0)
+               hrp.Anchored = true
+               task.wait(0.1)
+               hrp.Anchored = false
+            end
+            task.wait(0.01)
+         end
+      end)
+   end,
+})
+
+Tab2:CreateToggle({
+   Name = "Fullbright (Sáng map)",
+   CurrentValue = false,
+   Callback = function(Value)
+      game.Lighting.Brightness = Value and 2 or 1
+      game.Lighting.GlobalShadows = not Value
+   end,
+})
+
+Tab2:CreateButton({
+   Name = "Reset Nhân Vật",
+   Callback = function() game.Players.LocalPlayer.Character:BreakJoints() end,
+})
+
+Rayfield:Load()
