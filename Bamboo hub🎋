@@ -1,0 +1,56 @@
+-- Tạo Menu Mini Xịn Sò (Phong cách hiện đại)
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0, 180, 0, 130)
+MainFrame.Position = UDim2.new(0.5, -90, 0.5, -65)
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true -- Kéo thả menu
+
+-- Bo tròn góc cho Frame
+local UICorner = Instance.new("UICorner", MainFrame)
+UICorner.CornerRadius = UDim.new(0, 12)
+
+-- Thêm viền Neon màu tím
+local UIStroke = Instance.new("UIStroke", MainFrame)
+UIStroke.Color = Color3.fromRGB(150, 0, 255)
+UIStroke.Thickness = 2
+
+local SavedPosition = nil
+
+-- Hàm tạo nút đẹp
+local function CreateButton(text, color, pos)
+    local btn = Instance.new("TextButton", MainFrame)
+    btn.Size = UDim2.new(0, 150, 0, 40)
+    btn.Position = pos
+    btn.BackgroundColor3 = color
+    btn.Text = text
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 14
+    btn.BorderSizePixel = 0
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 8)
+    return btn
+end
+
+-- Nút Lưu (Vàng Gold)
+local SaveBtn = CreateButton("LƯU VỊ TRÍ", Color3.fromRGB(255, 200, 0), UDim2.new(0.5, -75, 0.15, 0))
+SaveBtn.MouseButton1Click:Connect(function()
+    SavedPosition = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+    SaveBtn.Text = "ĐÃ LƯU!"
+    task.wait(1)
+    SaveBtn.Text = "LƯU VỊ TRÍ"
+end)
+
+-- Nút Teleport (Xanh Dương Neon)
+local TPBtn = CreateButton("TELEPORT", Color3.fromRGB(0, 150, 255), UDim2.new(0.5, -75, 0.55, 0))
+TPBtn.MouseButton1Click:Connect(function()
+    if SavedPosition then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = SavedPosition
+    else
+        TPBtn.Text = "CHƯA LƯU!"
+        task.wait(1)
+        TPBtn.Text = "TELEPORT"
+    end
+end)
